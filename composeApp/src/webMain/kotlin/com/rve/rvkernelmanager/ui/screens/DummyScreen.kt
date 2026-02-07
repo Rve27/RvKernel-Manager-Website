@@ -13,10 +13,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.rve.rvkernelmanager.ui.components.navigation.AppBar.SimpleTopAppBar
 
 @Composable
 fun DummyScreen() {
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = { SimpleTopAppBar() }
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .padding(innerPadding)
