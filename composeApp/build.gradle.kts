@@ -30,6 +30,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.material.kolor)
+            implementation(libs.composables.icons.material.symbols.rounded.filled)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
