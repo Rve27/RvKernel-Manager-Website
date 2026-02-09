@@ -30,7 +30,9 @@ import com.composables.icons.materialsymbols.roundedfilled.Menu
 
 object AppBar {
     @Composable
-    fun SimpleTopAppBar() {
+    fun SimpleTopAppBar(
+        onNavigate: (Any) -> Unit
+    ) {
         val uriHandler = LocalUriHandler.current
 
         var expanded by remember { mutableStateOf(false) }
@@ -73,6 +75,23 @@ object AppBar {
                 containerColor = MaterialTheme.colorScheme.surfaceBright,
                 shadowElevation = 16.dp
             ) {
+                DropdownMenuItem(
+                    text = {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Home",
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    },
+                    onClick = {
+                        expanded = false
+                        onNavigate(Route.Home)
+                    }
+                )
                 DropdownMenuItem(
                     text = {
                         Box(

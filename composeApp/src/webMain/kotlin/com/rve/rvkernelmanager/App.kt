@@ -29,13 +29,48 @@
 //
 package com.rve.rvkernelmanager
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import com.rve.rvkernelmanager.ui.screens.DummyScreen
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.rve.rvkernelmanager.ui.components.navigation.AppBar.SimpleTopAppBar
+import com.rve.rvkernelmanager.ui.components.navigation.Route
+import com.rve.rvkernelmanager.ui.screens.HomeScreen
 import com.rve.rvkernelmanager.ui.theme.RvKernelManagerTheme
 
 @Composable
 fun App() {
     RvKernelManagerTheme {
-        DummyScreen()
+        val navController = rememberNavController()
+
+        Scaffold(
+            topBar = {
+                SimpleTopAppBar(
+                    onNavigate = { route ->
+                        navController.navigate(route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                )
+            }
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = Route.Home,
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                composable<Route.Home> {
+                    HomeScreen()
+                }
+            }
+        }
     }
 }
