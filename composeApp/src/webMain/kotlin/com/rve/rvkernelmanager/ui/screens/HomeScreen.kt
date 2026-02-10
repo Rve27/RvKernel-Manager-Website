@@ -192,6 +192,7 @@ private fun HeroSection() {
             Text(
                 text = "RvKernel Manager",
                 style = MaterialTheme.typography.displaySmall,
+                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.primary
             )
