@@ -12,10 +12,10 @@ import kotlinx.coroutines.launch
 class HomeViewModel : ViewModel() {
     private val repository = GitHubRepository()
 
-    private val _androidVersion = MutableStateFlow<String?>("unknown")
+    private val _androidVersion = MutableStateFlow<String?>(null)
     val androidVersion: StateFlow<String?> = _androidVersion.asStateFlow()
 
-    private val _linuxVersion = MutableStateFlow<String?>("unknown")
+    private val _linuxVersion = MutableStateFlow<String?>(null)
     val linuxVersion: StateFlow<String?> = _linuxVersion.asStateFlow()
 
     init {
