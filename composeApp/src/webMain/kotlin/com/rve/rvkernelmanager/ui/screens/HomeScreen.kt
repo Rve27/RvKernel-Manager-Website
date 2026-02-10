@@ -224,9 +224,9 @@ fun PlatformCard(
         shape = MaterialTheme.shapes.large
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
-                .padding(24.dp)
+                .padding(16.dp)
                 .fillMaxWidth()
         ) {
             Row(
@@ -296,7 +296,6 @@ fun PlatformCard(
             )
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 tags.forEach { tag ->
                     SuggestionChip(
