@@ -49,14 +49,11 @@ class GitHubRepository {
         }
     }
 
-    suspend fun getLatestVersion(repoPath: String): String? {
+    suspend fun getLatestRelease(repoPath: String): GitHubRelease? {
         return try {
-            val response: GitHubRelease = client
-                .get("https://api.github.com/repos/$repoPath/releases/latest")
-                .body()
-            response.tagName
+            client.get("https://api.github.com/repos/$repoPath/releases/latest").body()
         } catch (e: Exception) {
-            println("Error fetching version for $repoPath: ${e.message}")
+            println("Error fetching release for $repoPath: ${e.message}")
             null
         }
     }

@@ -33,4 +33,15 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GitHubRelease(@SerialName("tag_name") val tagName: String)
+data class GitHubRelease(
+    @SerialName("tag_name") val tagName: String,
+    @SerialName("html_url") val htmlUrl: String,
+    val assets: List<GitHubAsset> = emptyList(),
+)
+
+@Serializable
+data class GitHubAsset(
+    @SerialName("browser_download_url") val downloadUrl: String,
+    @SerialName("name") val name: String,
+    @SerialName("content_type") val contentType: String,
+)

@@ -47,17 +47,44 @@ class HomeViewModel : ViewModel() {
     private val _linuxVersion = MutableStateFlow<String?>(null)
     val linuxVersion: StateFlow<String?> = _linuxVersion.asStateFlow()
 
+    private val _androidDownloadUrl = MutableStateFlow<String?>(null)
+    val androidDownloadUrl: StateFlow<String?> = _androidDownloadUrl.asStateFlow()
+
+    private val _linuxDebUrl = MutableStateFlow<String?>(null)
+    val linuxDebUrl: StateFlow<String?> = _linuxDebUrl.asStateFlow()
+
+    private val _linuxRpmUrl = MutableStateFlow<String?>(null)
+    val linuxRpmUrl: StateFlow<String?> = _linuxRpmUrl.asStateFlow()
+
     init {
         fetchVersions()
     }
 
     private fun fetchVersions() {
         viewModelScope.launch {
-            val androidVer = repository.getLatestVersion("Rve27/RvKernel-Manager")
-            _androidVersion.update { androidVer }
+            val androidRelease = repository.getLatestRelease("Rve27/RvKernel-Manager")
+            if (androidRelease != null) {
+                _androidVersion.update { androidRelease.tagName }
 
-            val linuxVer = repository.getLatestVersion("Rve27/RvKernel-Manager-Linux")
-            _linuxVersion.update { linuxVer }
+                val apkUrl = androidRelease.assets.find {
+                    it.name == "app-release.apk"
+                }?.downloadUrl
+                    ?: androidRelease.assets.find { it.name.endsWith(".apk") }?.downloadUrl
+                    ?: androidRelease.htmlUrl
+
+                _androidDownloadUrl.update { apkUrl }
+            }
+
+            val linuxRelease = repository.getLatestRelease("Rve27/RvKernel-Manager-Linux")
+            if (linuxRelease != null) {
+                _linuxVersion.update { linuxRelease.tagName }
+
+                val deb = linuxRelease.assets.find { it.name.endsWith(".deb") }?.downloadUrl
+                val rpm = linuxRelease.assets.find { it.name.endsWith(".rpm") }?.downloadUrl
+
+                _linuxDebUrl.update { deb }
+                _linuxRpmUrl.update { rpm }
+            }
         }
     }
 }

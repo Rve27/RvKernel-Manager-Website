@@ -52,6 +52,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -61,9 +63,11 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -79,6 +83,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -105,6 +110,24 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel { HomeViewModel() }) {
 
     val androidVersion by viewModel.androidVersion.collectAsStateWithLifecycle()
     val linuxVersion by viewModel.linuxVersion.collectAsStateWithLifecycle()
+
+    val androidUrl by viewModel.androidDownloadUrl.collectAsStateWithLifecycle()
+    val debUrl by viewModel.linuxDebUrl.collectAsStateWithLifecycle()
+    val rpmUrl by viewModel.linuxRpmUrl.collectAsStateWithLifecycle()
+
+    var showLinuxDialog by remember { mutableStateOf(false) }
+
+    if (showLinuxDialog) {
+        LinuxDownloadDialog(
+            onDismissRequest = { showLinuxDialog = false },
+            debUrl = debUrl,
+            rpmUrl = rpmUrl,
+            onOpenLink = { url ->
+                uriHandler.openUri(url)
+                showLinuxDialog = false
+            },
+        )
+    }
 
     Box(
         modifier = Modifier
@@ -139,7 +162,9 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel { HomeViewModel() }) {
                         containerIconShape = MaterialShapes.Ghostish.toShape(),
                         icon = MaterialSymbols.RoundedFilled.Android,
                         tags = listOf("Root Required", "Android 12+", "Snapdragon", "Kernel Manager"),
-                        buttonOnClick = { uriHandler.openUri("https://github.com/Rve27/RvKernel-Manager") },
+                        onSourceClick = { uriHandler.openUri("https://github.com/Rve27/RvKernel-Manager") },
+                        onDownloadClick = { androidUrl?.let { uriHandler.openUri(it) } },
+                        isDownloadEnabled = androidUrl != null,
                     )
                     PlatformCard(
                         title = "RvKernel Manager for Linux",
@@ -148,7 +173,9 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel { HomeViewModel() }) {
                         containerIconShape = MaterialShapes.Square.toShape(),
                         icon = painterResource(Res.drawable.linux),
                         tags = listOf("Linux Desktop", "KMP", "Kernel Manager"),
-                        buttonOnClick = { uriHandler.openUri("https://github.com/Rve27/RvKernel-Manager") },
+                        onSourceClick = { uriHandler.openUri("https://github.com/Rve27/RvKernel-Manager-Linux") },
+                        onDownloadClick = { showLinuxDialog = true },
+                        isDownloadEnabled = (debUrl != null || rpmUrl != null),
                     )
                 }
             }
@@ -287,7 +314,9 @@ fun PlatformCard(
     containerIconShape: Shape,
     icon: Any?,
     tags: List<String>,
-    buttonOnClick: () -> Unit,
+    onSourceClick: () -> Unit,
+    onDownloadClick: () -> Unit,
+    isDownloadEnabled: Boolean = true,
 ) {
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
@@ -394,7 +423,7 @@ fun PlatformCard(
                 ) {
                     Button(
                         shapes = ButtonDefaults.shapes(),
-                        onClick = buttonOnClick,
+                        onClick = onSourceClick,
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -410,7 +439,8 @@ fun PlatformCard(
                     }
                     Button(
                         shapes = ButtonDefaults.shapes(),
-                        onClick = buttonOnClick,
+                        onClick = onDownloadClick,
+                        enabled = isDownloadEnabled,
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -459,4 +489,99 @@ fun FeatureItem(icon: ImageVector, title: String, description: String) {
             )
         }
     }
+}
+
+@Composable
+fun LinuxDownloadDialog(onDismissRequest: () -> Unit, debUrl: String?, rpmUrl: String?, onOpenLink: (String) -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        icon = { Icon(painterResource(Res.drawable.linux), contentDescription = null, modifier = Modifier.size(24.dp)) },
+        title = {
+            Text(text = "Select your Linux Distro", textAlign = TextAlign.Center)
+        },
+        text = {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                OutlinedCard(
+                    onClick = { debUrl?.let { onOpenLink(it) } },
+                    enabled = debUrl != null,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        Icon(MaterialSymbols.RoundedFilled.Download, contentDescription = null)
+                        Column {
+                            Text("Debian / Ubuntu", style = MaterialTheme.typography.titleSmall)
+                            Text("Download .deb package", style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
+                }
+
+                OutlinedCard(
+                    onClick = { rpmUrl?.let { onOpenLink(it) } },
+                    enabled = rpmUrl != null,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        Icon(MaterialSymbols.RoundedFilled.Download, contentDescription = null)
+                        Column {
+                            Text("Fedora / Red Hat", style = MaterialTheme.typography.titleSmall)
+                            Text("Download .rpm package", style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
+                }
+
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            "Arch Linux / Manjaro",
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            "Install via AUR using your favorite helper:",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        SelectionContainer {
+                            Text(
+                                "yay -S rvkernel-manager",
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f), shape = MaterialTheme.shapes.small)
+                                    .padding(8.dp)
+                                    .fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                shapes = ButtonDefaults.shapes(),
+                onClick = onDismissRequest,
+            ) {
+                Text("Close")
+            }
+        },
+    )
 }
