@@ -1,15 +1,36 @@
-@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+/*
+ * Copyright (c) 2026 Rve <rve27github@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
+// Dear programmer:
+// When I wrote this code, only god and
+// I knew how it worked.
+// Now, only god knows it!
+//
+// Therefore, if you are trying to optimize
+// this routine and it fails (most surely),
+// please increase this counter as a
+// warning for the next person:
+//
+// total hours wasted here = 254
+//
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
 
 package com.rve.rvkernelmanager.ui.screens
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import kotlinx.coroutines.delay
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -21,6 +42,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,7 +66,11 @@ import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -68,15 +94,13 @@ import com.composables.icons.materialsymbols.roundedfilled.Palette
 import com.composables.icons.materialsymbols.roundedfilled.Speed
 import com.composables.icons.materialsymbols.roundedfilled.Terminal
 import com.rve.rvkernelmanager.ui.viewmodel.HomeViewModel
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import rvkernelmanagerwebsite.composeapp.generated.resources.Res
 import rvkernelmanagerwebsite.composeapp.generated.resources.linux
 
-
 @Composable
-fun HomeScreen(
-    viewModel: HomeViewModel = viewModel { HomeViewModel() }
-) {
+fun HomeScreen(viewModel: HomeViewModel = viewModel { HomeViewModel() }) {
     val uriHandler = LocalUriHandler.current
 
     val androidVersion by viewModel.androidVersion.collectAsStateWithLifecycle()
@@ -85,11 +109,11 @@ fun HomeScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
+            .background(MaterialTheme.colorScheme.surface),
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 32.dp)
+            contentPadding = PaddingValues(bottom = 32.dp),
         ) {
             item {
                 HeroSection()
@@ -99,18 +123,19 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(24.dp)
+                    verticalArrangement = Arrangement.spacedBy(24.dp),
                 ) {
                     Text(
                         text = "Available Platforms",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                        modifier = Modifier.padding(bottom = 8.dp),
                     )
                     PlatformCard(
                         title = "RvKernel Manager for Android",
                         version = androidVersion,
-                        description = "Unlock the true potential of your Snapdragon device. Tune performance, battery life, and kernel parameters with a modern Material 3 interface.",
+                        description = "Unlock the true potential of your Snapdragon device. " +
+                            "Tune performance, battery life, and kernel parameters with a modern Material 3 interface.",
                         containerIconShape = MaterialShapes.Ghostish.toShape(),
                         icon = MaterialSymbols.RoundedFilled.Android,
                         tags = listOf("Root Required", "Android 12+", "Snapdragon", "Kernel Manager"),
@@ -131,13 +156,13 @@ fun HomeScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 8.dp)
+                        .padding(horizontal = 24.dp, vertical = 8.dp),
                 ) {
                     Text(
                         text = "Key Features",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 16.dp)
+                        modifier = Modifier.padding(bottom = 16.dp),
                     )
                     FlowRow(
                         modifier = Modifier.fillMaxWidth(),
@@ -147,27 +172,27 @@ fun HomeScreen(
                         FeatureItem(
                             icon = MaterialSymbols.RoundedFilled.Speed,
                             title = "Performance Tuning",
-                            description = "Adjust CPU/GPU frequencies, governors, and boost settings."
+                            description = "Adjust CPU/GPU frequencies, governors, and boost settings.",
                         )
                         FeatureItem(
                             icon = MaterialSymbols.RoundedFilled.Palette,
                             title = "Material 3 Expressive",
-                            description = "Beautiful UI with dynamic theming and expressive animations."
+                            description = "Beautiful UI with dynamic theming and expressive animations.",
                         )
                         FeatureItem(
                             icon = MaterialSymbols.RoundedFilled.Bolt,
                             title = "Battery Monitor",
-                            description = "Track voltage, temperature, and charging speeds in real-time."
+                            description = "Track voltage, temperature, and charging speeds in real-time.",
                         )
                         FeatureItem(
                             icon = MaterialSymbols.RoundedFilled.Memory,
                             title = "Memory Management",
-                            description = "Configure ZRAM, Swappiness, VM, and more."
+                            description = "Configure ZRAM, Swappiness, VM, and more.",
                         )
                         FeatureItem(
                             icon = MaterialSymbols.RoundedFilled.Terminal,
                             title = "Open Source",
-                            description = "Full transparency. Code available on GitHub."
+                            description = "Full transparency. Code available on GitHub.",
                         )
                     }
                 }
@@ -195,37 +220,37 @@ private fun HeroSection() {
                 brush = Brush.verticalGradient(
                     colors = listOf(
                         MaterialTheme.colorScheme.primaryContainer,
-                        MaterialTheme.colorScheme.surface
-                    )
-                )
+                        MaterialTheme.colorScheme.surface,
+                    ),
+                ),
             )
             .padding(top = 64.dp, bottom = 48.dp, start = 24.dp, end = 24.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             Text(
                 text = "RvKernel Manager",
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.height(16.dp))
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.Center,
                 ) {
                     Text(
                         text = "The ultimate tool to ",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     AnimatedContent(
                         targetState = actions[currentIndex],
@@ -233,13 +258,13 @@ private fun HeroSection() {
                             (slideInVertically { height -> height } + fadeIn())
                                 .togetherWith(slideOutVertically { height -> -height } + fadeOut())
                         },
-                        label = "Action Animation"
+                        label = "Action Animation",
                     ) { targetAction ->
                         Text(
                             text = targetAction,
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.primary,
                         )
                     }
                 }
@@ -247,7 +272,7 @@ private fun HeroSection() {
                     text = "your Android & Linux Kernels.",
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
@@ -267,15 +292,15 @@ fun PlatformCard(
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),
-        shape = MaterialTheme.shapes.large
+        shape = MaterialTheme.shapes.large,
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -287,36 +312,37 @@ fun PlatformCard(
                         .background(MaterialTheme.colorScheme.tertiary)
                         .padding(8.dp)
                         .size(40.dp),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     when (icon) {
                         is Painter -> Icon(
                             painter = icon,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onTertiary,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
                         )
+
                         is ImageVector -> Icon(
                             imageVector = icon,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onTertiary,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
                         )
                     }
                 }
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
 
                 ) {
                     Text(
                         text = title,
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
                     )
                     Card(
                         shape = MaterialTheme.shapes.extraSmall,
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.tertiary
+                            containerColor = MaterialTheme.colorScheme.tertiary,
                         ),
                     ) {
                         AnimatedContent(
@@ -325,13 +351,13 @@ fun PlatformCard(
                                 (slideInVertically { height -> height } + fadeIn())
                                     .togetherWith(slideOutVertically { height -> -height } + fadeOut())
                             },
-                            label = "Version Animation"
+                            label = "Version Animation",
                         ) { targetText ->
                             Text(
                                 text = targetText,
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.onTertiary,
-                                modifier = Modifier.padding(horizontal = 4.dp)
+                                modifier = Modifier.padding(horizontal = 4.dp),
                             )
                         }
                     }
@@ -340,7 +366,7 @@ fun PlatformCard(
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -353,18 +379,18 @@ fun PlatformCard(
                         border = null,
                         colors = SuggestionChipDefaults.suggestionChipColors(
                             disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
-                            disabledLabelColor = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
+                            disabledLabelColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        ),
                     )
                 }
             }
 
             Box(
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier.align(Alignment.End),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Button(
                         shapes = ButtonDefaults.shapes(),
@@ -372,13 +398,13 @@ fun PlatformCard(
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             Text("Source code")
                             Icon(
                                 imageVector = MaterialSymbols.RoundedFilled.Code,
                                 contentDescription = null,
-                                modifier = Modifier.size(ButtonDefaults.IconSize)
+                                modifier = Modifier.size(ButtonDefaults.IconSize),
                             )
                         }
                     }
@@ -388,13 +414,13 @@ fun PlatformCard(
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             Text("Download")
                             Icon(
                                 imageVector = MaterialSymbols.RoundedFilled.Download,
                                 contentDescription = null,
-                                modifier = Modifier.size(ButtonDefaults.IconSize)
+                                modifier = Modifier.size(ButtonDefaults.IconSize),
                             )
                         }
                     }
@@ -405,35 +431,31 @@ fun PlatformCard(
 }
 
 @Composable
-fun FeatureItem(
-    icon: ImageVector,
-    title: String,
-    description: String
-) {
+fun FeatureItem(icon: ImageVector, title: String, description: String) {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
         ),
-        modifier = Modifier.width(300.dp)
+        modifier = Modifier.width(300.dp),
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary
+                tint = MaterialTheme.colorScheme.secondary,
             )
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }

@@ -58,14 +58,14 @@ fun App() {
                             launchSingleTop = true
                             restoreState = true
                         }
-                    }
+                    },
                 )
-            }
+            },
         ) { innerPadding ->
             NavHost(
                 navController = navController,
                 startDestination = Route.Home,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding),
             ) {
                 composable<Route.Home> {
                     HomeScreen()

@@ -1,3 +1,32 @@
+/*
+ * Copyright (c) 2026 Rve <rve27github@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+// Dear programmer:
+// When I wrote this code, only god and
+// I knew how it worked.
+// Now, only god knows it!
+//
+// Therefore, if you are trying to optimize
+// this routine and it fails (most surely),
+// please increase this counter as a
+// warning for the next person:
+//
+// total hours wasted here = 254
+//
 @file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
 
 package com.rve.rvkernelmanager.ui.theme
@@ -17,9 +46,7 @@ import rvkernelmanagerwebsite.composeapp.generated.resources.Res
 import rvkernelmanagerwebsite.composeapp.generated.resources.google_sans_flex
 
 @Composable
-fun RvKernelManagerTheme(
-    content: @Composable () -> Unit
-) {
+fun RvKernelManagerTheme(content: @Composable () -> Unit) {
     val isDark = isSystemInDarkTheme()
     val colorScheme = rememberDynamicColorScheme(seedColor = Color(0xFFEBAC00), isDark = isDark)
 
@@ -27,7 +54,7 @@ fun RvKernelManagerTheme(
         Font(Res.font.google_sans_flex, weight = FontWeight.Medium),
         Font(Res.font.google_sans_flex, weight = FontWeight.Normal),
         Font(Res.font.google_sans_flex, weight = FontWeight.Bold),
-        Font(Res.font.google_sans_flex, weight = FontWeight.SemiBold)
+        Font(Res.font.google_sans_flex, weight = FontWeight.SemiBold),
     )
 
     val defaultTypography = Typography()
@@ -46,13 +73,13 @@ fun RvKernelManagerTheme(
         bodySmall = defaultTypography.bodySmall.copy(fontFamily = googleSansFontFamily),
         labelLarge = defaultTypography.labelLarge.copy(fontFamily = googleSansFontFamily),
         labelMedium = defaultTypography.labelMedium.copy(fontFamily = googleSansFontFamily),
-        labelSmall = defaultTypography.labelSmall.copy(fontFamily = googleSansFontFamily)
+        labelSmall = defaultTypography.labelSmall.copy(fontFamily = googleSansFontFamily),
     )
 
     MaterialExpressiveTheme(
         colorScheme = colorScheme,
         motionScheme = MotionScheme.expressive(),
         typography = appTypography,
-        content = content
+        content = content,
     )
 }
