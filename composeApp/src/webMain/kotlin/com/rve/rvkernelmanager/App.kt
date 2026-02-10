@@ -29,9 +29,14 @@
 //
 package com.rve.rvkernelmanager
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -44,12 +49,17 @@ import com.rve.rvkernelmanager.ui.theme.RvKernelManagerTheme
 
 @Composable
 fun App() {
-    RvKernelManagerTheme {
+    val isDark = isSystemInDarkTheme()
+    var isDarkTheme by remember { mutableStateOf(isDark) }
+
+    RvKernelManagerTheme(isDarkTheme = isDarkTheme) {
         val navController = rememberNavController()
 
         Scaffold(
             topBar = {
                 SimpleTopAppBar(
+                    isDarkTheme = isDarkTheme,
+                    onThemeChange = { isDarkTheme = it },
                     onNavigate = { route ->
                         navController.navigate(route) {
                             popUpTo(navController.graph.findStartDestination().id) {

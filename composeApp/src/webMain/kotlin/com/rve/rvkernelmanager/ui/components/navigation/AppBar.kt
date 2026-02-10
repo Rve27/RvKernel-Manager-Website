@@ -27,23 +27,38 @@
 //
 // total hours wasted here = 254
 //
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 
 package com.rve.rvkernelmanager.ui.components.navigation
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -58,14 +73,22 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.composables.icons.materialsymbols.MaterialSymbols
+import com.composables.icons.materialsymbols.roundedfilled.Dark_mode
+import com.composables.icons.materialsymbols.roundedfilled.Light_mode
 import com.composables.icons.materialsymbols.roundedfilled.Menu
 
 object AppBar {
     @Composable
-    fun SimpleTopAppBar(onNavigate: (Any) -> Unit) {
+    fun SimpleTopAppBar(
+        isDarkTheme: Boolean,
+        onThemeChange: (Boolean) -> Unit,
+        onNavigate: (Any) -> Unit
+    ) {
         val uriHandler = LocalUriHandler.current
+        val interactionSource = remember { MutableInteractionSource() }
 
         var expanded by remember { mutableStateOf(false) }
 
@@ -136,18 +159,91 @@ object AppBar {
                                     uriHandler.openUri("https://t.me/rve_enterprises")
                                 },
                             )
+                            HorizontalDivider()
+                            DropdownMenuItem(
+                                interactionSource = interactionSource,
+                                text = {
+                                    Box(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        val slowSpatialSpec = MaterialTheme.motionScheme.slowSpatialSpec<Float>()
+                                        val slowEffectsSpec = MaterialTheme.motionScheme.slowSpatialSpec<Float>()
+
+                                        Switch(
+                                            interactionSource = interactionSource,
+                                            thumbContent = {
+                                                AnimatedContent(
+                                                    targetState = isDarkTheme,
+                                                    transitionSpec = {
+                                                        (scaleIn(
+                                                            animationSpec = slowSpatialSpec
+                                                        ) + fadeIn(
+                                                            animationSpec = slowEffectsSpec
+                                                        )).togetherWith(scaleOut(
+                                                            animationSpec = slowSpatialSpec
+                                                        ) + fadeOut(
+                                                            animationSpec = slowEffectsSpec
+                                                        ))
+                                                    },
+                                                    label = "Switch thumb icon animation"
+                                                ) { isDark ->
+                                                    Icon(
+                                                        imageVector = if (isDark)
+                                                            MaterialSymbols.RoundedFilled.Dark_mode
+                                                        else
+                                                            MaterialSymbols.RoundedFilled.Light_mode,
+                                                        contentDescription = if (isDark) "Dark mode" else "Light mode",
+                                                        modifier = Modifier.size(SwitchDefaults.IconSize)
+                                                    )
+                                                }
+                                            },
+                                            checked = isDarkTheme,
+                                            onCheckedChange = { onThemeChange(it) }
+                                        )
+                                    }
+                                },
+                                onClick = {
+                                    onThemeChange(!isDarkTheme)
+                                }
+                            )
                         }
                     } else {
                         Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.padding(end = 16.dp)
                         ) {
                             TextButton(onClick = { onNavigate(Route.Home) }) {
                                 Text("Home", color = MaterialTheme.colorScheme.primary)
                             }
-                            Spacer(modifier = Modifier.width(8.dp))
                             TextButton(onClick = { uriHandler.openUri("https://t.me/rve_enterprises") }) {
                                 Text("Telegram", color = MaterialTheme.colorScheme.primary)
+                            }
+                            IconButton(onClick = { onThemeChange(!isDarkTheme) }) {
+                                val slowSpatialSpec = MaterialTheme.motionScheme.slowSpatialSpec<IntOffset>()
+                                val slowEffectsSpec = MaterialTheme.motionScheme.slowEffectsSpec<Float>()
+
+                                AnimatedContent(
+                                    targetState = isDarkTheme,
+                                    transitionSpec = {
+                                        if (targetState) {
+                                            (slideInVertically(slowSpatialSpec) { height -> -height } + fadeIn(slowEffectsSpec)) togetherWith
+                                                    (slideOutVertically(slowSpatialSpec) { height -> height } + fadeOut(slowEffectsSpec))
+                                        } else {
+                                            (slideInVertically(slowSpatialSpec) { height -> height } + fadeIn(slowEffectsSpec)) togetherWith
+                                                    (slideOutVertically(slowSpatialSpec) { height -> -height } + fadeOut(slowEffectsSpec))
+                                        }.using(
+                                            SizeTransform(clip = false),
+                                        )
+                                    },
+                                ) { isDark ->
+                                    Image(
+                                        imageVector = if (isDark) MaterialSymbols.RoundedFilled.Light_mode else MaterialSymbols.RoundedFilled.Dark_mode,
+                                        contentDescription = if (isDark) "Dark mode" else "Light mode",
+                                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                                    )
+                                }
                             }
                         }
                     }

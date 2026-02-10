@@ -31,7 +31,6 @@
 
 package com.rve.rvkernelmanager.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MotionScheme
@@ -46,9 +45,11 @@ import rvkernelmanagerwebsite.composeapp.generated.resources.Res
 import rvkernelmanagerwebsite.composeapp.generated.resources.google_sans_flex
 
 @Composable
-fun RvKernelManagerTheme(content: @Composable () -> Unit) {
-    val isDark = isSystemInDarkTheme()
-    val colorScheme = rememberDynamicColorScheme(seedColor = Color(0xFFEBAC00), isDark = isDark)
+fun RvKernelManagerTheme(
+    isDarkTheme: Boolean,
+    content: @Composable () -> Unit
+) {
+    val colorScheme = rememberDynamicColorScheme(seedColor = Color(0xFFEBAC00), isDark = isDarkTheme)
 
     val googleSansFontFamily = FontFamily(
         Font(Res.font.google_sans_flex, weight = FontWeight.Medium),
