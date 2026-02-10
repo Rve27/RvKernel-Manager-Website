@@ -39,7 +39,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -86,40 +85,57 @@ object AppBar {
                 },
                 actions = {
                     if (isCompact) {
-                        Box(contentAlignment = Alignment.Center) {
-                            IconButton(
-                                onClick = { expanded = !expanded },
-                                modifier = Modifier.padding(end = 8.dp),
-                            ) {
-                                Image(
-                                    imageVector = MaterialSymbols.RoundedFilled.Menu,
-                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
-                                    contentDescription = "Menu",
-                                )
-                            }
-                            
-                            DropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false },
-                                shape = MaterialTheme.shapes.extraLarge,
-                                containerColor = MaterialTheme.colorScheme.surfaceBright,
-                                shadowElevation = 16.dp,
-                            ) {
-                                DropdownMenuItem(
-                                    text = { Text("Home", color = MaterialTheme.colorScheme.onSurface) },
-                                    onClick = {
-                                        expanded = false
-                                        onNavigate(Route.Home)
-                                    },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Telegram", color = MaterialTheme.colorScheme.onSurface) },
-                                    onClick = {
-                                        expanded = false
-                                        uriHandler.openUri("https://t.me/rve_enterprises")
-                                    },
-                                )
-                            }
+                        IconButton(
+                            onClick = { expanded = !expanded },
+                            modifier = Modifier.padding(end = 8.dp),
+                        ) {
+                            Image(
+                                imageVector = MaterialSymbols.RoundedFilled.Menu,
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                                contentDescription = "Menu",
+                            )
+                        }
+
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            shape = MaterialTheme.shapes.large,
+                            containerColor = MaterialTheme.colorScheme.surfaceBright,
+                        ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Box(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                    Text(
+                                        text = "Home",
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                        }
+                                },
+                                onClick = {
+                                    expanded = false
+                                    onNavigate(Route.Home)
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Box(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Text(
+                                            text = "Telegram",
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+                                },
+                                onClick = {
+                                    expanded = false
+                                    uriHandler.openUri("https://t.me/rve_enterprises")
+                                },
+                            )
                         }
                     } else {
                         Row(
