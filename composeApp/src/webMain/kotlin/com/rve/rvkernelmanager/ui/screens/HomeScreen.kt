@@ -3,6 +3,13 @@
 
 package com.rve.rvkernelmanager.ui.screens
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -82,7 +89,7 @@ fun HomeScreen(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = 32.dp)
+            contentPadding = PaddingValues(bottom = 32.dp)
         ) {
             item {
                 HeroSection()
@@ -171,6 +178,16 @@ fun HomeScreen(
 
 @Composable
 private fun HeroSection() {
+    val actions = listOf("manage", "tune", "monitor")
+    var currentIndex by remember { mutableStateOf(0) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(2000)
+            currentIndex = (currentIndex + 1) % actions.size
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -197,12 +214,42 @@ private fun HeroSection() {
                 color = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "The ultimate tool to manage, tune, and monitor\nyour Android & Linux Kernels.",
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "The ultimate tool to ",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    AnimatedContent(
+                        targetState = actions[currentIndex],
+                        transitionSpec = {
+                            (slideInVertically { height -> height } + fadeIn())
+                                .togetherWith(slideOutVertically { height -> -height } + fadeOut())
+                        },
+                        label = "Action Animation"
+                    ) { targetAction ->
+                        Text(
+                            text = targetAction,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+                Text(
+                    text = "your Android & Linux Kernels.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
