@@ -52,6 +52,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -71,6 +72,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -117,6 +119,14 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel { HomeViewModel() }) {
 
     var showLinuxDialog by remember { mutableStateOf(false) }
 
+    val listState = rememberLazyListState()
+
+    val isHeroVisible by remember {
+        derivedStateOf {
+            listState.layoutInfo.visibleItemsInfo.any { it.index == 0 }
+        }
+    }
+
     if (showLinuxDialog) {
         LinuxDownloadDialog(
             onDismissRequest = { showLinuxDialog = false },
@@ -135,11 +145,12 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel { HomeViewModel() }) {
             .background(MaterialTheme.colorScheme.surface),
     ) {
         LazyColumn(
+            state = listState,
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 32.dp),
         ) {
             item {
-                HeroSection()
+                HeroSection(isAnimText = isHeroVisible)
             }
             item {
                 Column(
@@ -229,14 +240,16 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel { HomeViewModel() }) {
 }
 
 @Composable
-private fun HeroSection() {
+private fun HeroSection(isAnimText: Boolean) {
     val actions = listOf("manage", "tune", "monitor")
     var currentIndex by remember { mutableStateOf(0) }
 
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(2000)
-            currentIndex = (currentIndex + 1) % actions.size
+    LaunchedEffect(isAnimText) {
+        if (isAnimText) {
+            while (true) {
+                delay(2000)
+                currentIndex = (currentIndex + 1) % actions.size
+            }
         }
     }
 
