@@ -50,7 +50,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -93,13 +92,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.composables.icons.materialsymbols.MaterialSymbols
 import com.composables.icons.materialsymbols.roundedfilled.Android
-import com.composables.icons.materialsymbols.roundedfilled.Bolt
 import com.composables.icons.materialsymbols.roundedfilled.Code
 import com.composables.icons.materialsymbols.roundedfilled.Download
-import com.composables.icons.materialsymbols.roundedfilled.Memory
-import com.composables.icons.materialsymbols.roundedfilled.Palette
-import com.composables.icons.materialsymbols.roundedfilled.Speed
-import com.composables.icons.materialsymbols.roundedfilled.Terminal
 import com.rve.rvkernelmanager.ui.viewmodel.HomeViewModel
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
@@ -190,51 +184,6 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel { HomeViewModel() }) {
                     )
                 }
             }
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 8.dp),
-                ) {
-                    Text(
-                        text = "Key Features",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 16.dp),
-                    )
-                    FlowRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                    ) {
-                        FeatureItem(
-                            icon = MaterialSymbols.RoundedFilled.Speed,
-                            title = "Performance Tuning",
-                            description = "Adjust CPU/GPU frequencies, governors, and boost settings.",
-                        )
-                        FeatureItem(
-                            icon = MaterialSymbols.RoundedFilled.Palette,
-                            title = "Material 3 Expressive",
-                            description = "Beautiful UI with dynamic theming and expressive animations.",
-                        )
-                        FeatureItem(
-                            icon = MaterialSymbols.RoundedFilled.Bolt,
-                            title = "Battery Monitor",
-                            description = "Track voltage, temperature, and charging speeds in real-time.",
-                        )
-                        FeatureItem(
-                            icon = MaterialSymbols.RoundedFilled.Memory,
-                            title = "Memory Management",
-                            description = "Configure ZRAM, Swappiness, VM, and more.",
-                        )
-                        FeatureItem(
-                            icon = MaterialSymbols.RoundedFilled.Terminal,
-                            title = "Open Source",
-                            description = "Full transparency. Code available on GitHub.",
-                        )
-                    }
-                }
-            }
         }
     }
 }
@@ -320,7 +269,7 @@ private fun HeroSection(isAnimText: Boolean) {
 }
 
 @Composable
-fun PlatformCard(
+private fun PlatformCard(
     title: String,
     version: String?,
     description: String,
@@ -474,38 +423,7 @@ fun PlatformCard(
 }
 
 @Composable
-fun FeatureItem(icon: ImageVector, title: String, description: String) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        ),
-        modifier = Modifier.width(300.dp),
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier.padding(16.dp),
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary,
-            )
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-            )
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-    }
-}
-
-@Composable
-fun LinuxDownloadDialog(onDismissRequest: () -> Unit, debUrl: String?, rpmUrl: String?, onOpenLink: (String) -> Unit) {
+private fun LinuxDownloadDialog(onDismissRequest: () -> Unit, debUrl: String?, rpmUrl: String?, onOpenLink: (String) -> Unit) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         icon = { Icon(painterResource(Res.drawable.linux), contentDescription = null, modifier = Modifier.size(24.dp)) },
