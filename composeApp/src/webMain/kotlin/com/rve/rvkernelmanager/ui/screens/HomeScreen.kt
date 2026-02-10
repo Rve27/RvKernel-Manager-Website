@@ -3,6 +3,12 @@
 
 package com.rve.rvkernelmanager.ui.screens
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,6 +37,7 @@ import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +49,8 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.composables.icons.materialsymbols.MaterialSymbols
 import com.composables.icons.materialsymbols.roundedfilled.Android
 import com.composables.icons.materialsymbols.roundedfilled.Bolt
@@ -51,14 +60,20 @@ import com.composables.icons.materialsymbols.roundedfilled.Memory
 import com.composables.icons.materialsymbols.roundedfilled.Palette
 import com.composables.icons.materialsymbols.roundedfilled.Speed
 import com.composables.icons.materialsymbols.roundedfilled.Terminal
+import com.rve.rvkernelmanager.ui.viewmodel.HomeViewModel
 import org.jetbrains.compose.resources.painterResource
 import rvkernelmanagerwebsite.composeapp.generated.resources.Res
 import rvkernelmanagerwebsite.composeapp.generated.resources.linux
 
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    viewModel: HomeViewModel = viewModel { HomeViewModel() }
+) {
     val uriHandler = LocalUriHandler.current
+
+    val androidVersion by viewModel.androidVersion.collectAsStateWithLifecycle()
+    val linuxVersion by viewModel.linuxVersion.collectAsStateWithLifecycle()
 
     Box(
         modifier = Modifier
@@ -87,6 +102,7 @@ fun HomeScreen() {
                     )
                     PlatformCard(
                         title = "RvKernel Manager for Android",
+                        version = androidVersion,
                         description = "Unlock the true potential of your Snapdragon device. Tune performance, battery life, and kernel parameters with a modern Material 3 interface.",
                         containerIconShape = MaterialShapes.Ghostish.toShape(),
                         icon = MaterialSymbols.RoundedFilled.Android,
@@ -95,6 +111,7 @@ fun HomeScreen() {
                     )
                     PlatformCard(
                         title = "RvKernel Manager for Linux",
+                        version = linuxVersion,
                         description = "A powerful tool to manage Linux kernels. Built with Kotlin Multiplatform for desktop environments.",
                         containerIconShape = MaterialShapes.Square.toShape(),
                         icon = painterResource(Res.drawable.linux),
@@ -192,6 +209,7 @@ private fun HeroSection() {
 @Composable
 fun PlatformCard(
     title: String,
+    version: String?,
     description: String,
     containerIconShape: Shape,
     icon: Any?,
@@ -219,27 +237,57 @@ fun PlatformCard(
                     modifier = Modifier
                         .clip(containerIconShape)
                         .background(MaterialTheme.colorScheme.tertiary)
-                        .padding(8.dp),
+                        .padding(8.dp)
+                        .size(40.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     when (icon) {
                         is Painter -> Icon(
                             painter = icon,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onTertiary
+                            tint = MaterialTheme.colorScheme.onTertiary,
+                            modifier = Modifier.fillMaxSize()
                         )
                         is ImageVector -> Icon(
                             imageVector = icon,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onTertiary
+                            tint = MaterialTheme.colorScheme.onTertiary,
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
                 }
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+
+                ) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Card(
+                        shape = MaterialTheme.shapes.extraSmall,
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary
+                        ),
+                    ) {
+                        AnimatedContent(
+                            targetState = version ?: "Checking...",
+                            transitionSpec = {
+                                (slideInVertically { height -> height } + fadeIn())
+                                    .togetherWith(slideOutVertically { height -> -height } + fadeOut())
+                            },
+                            label = "Version Animation"
+                        ) { targetText ->
+                            Text(
+                                text = targetText,
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onTertiary,
+                                modifier = Modifier.padding(horizontal = 4.dp)
+                            )
+                        }
+                    }
+                }
             }
             Text(
                 text = description,
