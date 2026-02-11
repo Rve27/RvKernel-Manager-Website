@@ -87,6 +87,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -236,6 +237,9 @@ private fun HeroSection(isAnimText: Boolean) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
                 ) {
+                    val slowSpatialSpec = MaterialTheme.motionScheme.slowSpatialSpec<IntOffset>()
+                    val slowEffectsSpec = MaterialTheme.motionScheme.slowEffectsSpec<Float>()
+
                     Text(
                         text = "The ultimate tool to ",
                         style = MaterialTheme.typography.bodyLarge,
@@ -244,8 +248,21 @@ private fun HeroSection(isAnimText: Boolean) {
                     AnimatedContent(
                         targetState = actions[currentIndex],
                         transitionSpec = {
-                            (slideInVertically { height -> height } + fadeIn())
-                                .togetherWith(slideOutVertically { height -> -height } + fadeOut())
+                            (slideInVertically(
+                                animationSpec = slowSpatialSpec
+                            ) {
+                                height -> height
+                            } + fadeIn(
+                                animationSpec = slowEffectsSpec
+                            ))
+                                .togetherWith(
+                                    slideOutVertically(
+                                        animationSpec = slowSpatialSpec
+                                    ) {
+                                        height -> -height
+                                    } + fadeOut(
+                                        animationSpec = slowEffectsSpec
+                                    ))
                         },
                         label = "Action Animation",
                     ) { targetAction ->
