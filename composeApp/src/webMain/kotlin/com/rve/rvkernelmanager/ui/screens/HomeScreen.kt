@@ -40,6 +40,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -148,41 +149,78 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel { HomeViewModel() }) {
                 HeroSection(isAnimText = isHeroVisible)
             }
             item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(24.dp),
-                ) {
-                    Text(
-                        text = "Available Platforms",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 8.dp),
-                    )
-                    PlatformCard(
-                        title = "RvKernel Manager for Android",
-                        version = androidVersion,
-                        description = "Unlock the true potential of your Snapdragon device. " +
-                            "Tune performance, battery life, and kernel parameters with a modern Material 3 interface.",
-                        containerIconShape = MaterialShapes.Ghostish.toShape(),
-                        icon = MaterialSymbols.RoundedFilled.Android,
-                        tags = listOf("Root Required", "Android 12+", "Snapdragon", "Kernel Manager"),
-                        onSourceClick = { uriHandler.openUri("https://github.com/Rve27/RvKernel-Manager") },
-                        onDownloadClick = { androidUrl?.let { uriHandler.openUri(it) } },
-                        isDownloadEnabled = androidUrl != null,
-                    )
-                    PlatformCard(
-                        title = "RvKernel Manager for Linux",
-                        version = linuxVersion,
-                        description = "A powerful tool to manage Linux kernels. Built with Kotlin Multiplatform for desktop environments.",
-                        containerIconShape = MaterialShapes.Square.toShape(),
-                        icon = painterResource(Res.drawable.linux),
-                        tags = listOf("Linux Desktop", "KMP", "Kernel Manager"),
-                        onSourceClick = { uriHandler.openUri("https://github.com/Rve27/RvKernel-Manager-Linux") },
-                        onDownloadClick = { showLinuxDialog = true },
-                        isDownloadEnabled = (debUrl != null || rpmUrl != null),
-                    )
+                BoxWithConstraints {
+                    val isCompact = maxWidth < 840.dp
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        verticalArrangement = Arrangement.spacedBy(24.dp),
+                    ) {
+                        Text(
+                            text = "Available Platforms",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 8.dp),
+                        )
+                        if (isCompact) {
+                            PlatformCard(
+                                title = "RvKernel Manager for Android",
+                                version = androidVersion,
+                                description = "Unlock the true potential of your Snapdragon device. " +
+                                        "Tune performance, battery life, and kernel parameters with a modern Material 3 interface.",
+                                containerIconShape = MaterialShapes.Ghostish.toShape(),
+                                icon = MaterialSymbols.RoundedFilled.Android,
+                                tags = listOf("Root Required", "Android 12+", "Snapdragon", "Kernel Manager"),
+                                onSourceClick = { uriHandler.openUri("https://github.com/Rve27/RvKernel-Manager") },
+                                onDownloadClick = { androidUrl?.let { uriHandler.openUri(it) } },
+                                isDownloadEnabled = androidUrl != null,
+                            )
+                            PlatformCard(
+                                title = "RvKernel Manager for Linux",
+                                version = linuxVersion,
+                                description = "A powerful tool to manage Linux kernels. Built with Kotlin Multiplatform for desktop environments.",
+                                containerIconShape = MaterialShapes.Square.toShape(),
+                                icon = painterResource(Res.drawable.linux),
+                                tags = listOf("Linux Desktop", "KMP", "Kernel Manager"),
+                                onSourceClick = { uriHandler.openUri("https://github.com/Rve27/RvKernel-Manager-Linux") },
+                                onDownloadClick = { showLinuxDialog = true },
+                                isDownloadEnabled = (debUrl != null || rpmUrl != null),
+                            )
+                        } else {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(24.dp),
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                PlatformCard(
+                                    title = "RvKernel Manager for Android",
+                                    version = androidVersion,
+                                    description = "Unlock the true potential of your Snapdragon device. " +
+                                            "Tune performance, battery life, and kernel parameters with a modern Material 3 interface.",
+                                    containerIconShape = MaterialShapes.Ghostish.toShape(),
+                                    icon = MaterialSymbols.RoundedFilled.Android,
+                                    tags = listOf("Root Required", "Android 12+", "Snapdragon", "Kernel Manager"),
+                                    onSourceClick = { uriHandler.openUri("https://github.com/Rve27/RvKernel-Manager") },
+                                    onDownloadClick = { androidUrl?.let { uriHandler.openUri(it) } },
+                                    isDownloadEnabled = androidUrl != null,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                PlatformCard(
+                                    title = "RvKernel Manager for Linux",
+                                    version = linuxVersion,
+                                    description = "A powerful tool to manage Linux kernels. Built with Kotlin Multiplatform for desktop environments.",
+                                    containerIconShape = MaterialShapes.Square.toShape(),
+                                    icon = painterResource(Res.drawable.linux),
+                                    tags = listOf("Linux Desktop", "KMP", "Kernel Manager"),
+                                    onSourceClick = { uriHandler.openUri("https://github.com/Rve27/RvKernel-Manager-Linux") },
+                                    onDownloadClick = { showLinuxDialog = true },
+                                    isDownloadEnabled = (debUrl != null || rpmUrl != null),
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -287,6 +325,7 @@ private fun HeroSection(isAnimText: Boolean) {
 
 @Composable
 private fun PlatformCard(
+    modifier: Modifier = Modifier,
     title: String,
     version: String?,
     description: String,
@@ -298,7 +337,7 @@ private fun PlatformCard(
     isDownloadEnabled: Boolean = true,
 ) {
     ElevatedCard(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.elevatedCardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),
