@@ -119,7 +119,7 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel { HomeViewModel() }) {
 
     val isHeroVisible by remember {
         derivedStateOf {
-            listState.layoutInfo.visibleItemsInfo.any { it.index == 0 }
+            listState.firstVisibleItemIndex == 0
         }
     }
 
