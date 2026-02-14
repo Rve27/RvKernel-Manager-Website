@@ -44,6 +44,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.rve.rvkernelmanager.ui.components.navigation.AppBar.SimpleTopAppBar
 import com.rve.rvkernelmanager.ui.components.navigation.Route
+import com.rve.rvkernelmanager.ui.screens.DummyScreen
 import com.rve.rvkernelmanager.ui.screens.HomeScreen
 import com.rve.rvkernelmanager.ui.theme.RvKernelManagerTheme
 
@@ -79,6 +80,9 @@ fun App() {
             ) {
                 composable<Route.Home> {
                     HomeScreen()
+                }
+                composable<Route.RvKernelLinux> {
+                    DummyScreen()
                 }
             }
         }

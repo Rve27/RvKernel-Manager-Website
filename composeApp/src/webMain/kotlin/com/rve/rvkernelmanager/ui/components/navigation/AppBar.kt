@@ -149,6 +149,23 @@ object AppBar {
                                         contentAlignment = Alignment.Center,
                                     ) {
                                         Text(
+                                            text = "RvKernel Linux",
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+                                },
+                                onClick = {
+                                    expanded = false
+                                    onNavigate(Route.RvKernelLinux)
+                                },
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Box(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Text(
                                             text = "Telegram",
                                             color = MaterialTheme.colorScheme.onSurface
                                         )
@@ -216,6 +233,9 @@ object AppBar {
                         ) {
                             TextButton(onClick = { onNavigate(Route.Home) }) {
                                 Text("Home", color = MaterialTheme.colorScheme.primary)
+                            }
+                            TextButton(onClick = { onNavigate(Route.RvKernelLinux) }) {
+                                Text("RvKernel Linux", color = MaterialTheme.colorScheme.primary)
                             }
                             TextButton(onClick = { uriHandler.openUri("https://t.me/rve_enterprises") }) {
                                 Text("Telegram", color = MaterialTheme.colorScheme.primary)
